@@ -1,17 +1,20 @@
 package ubi;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-public class Main {
-    public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
-        }
+public class Main {
+
+
+    public static void main(String[] args) {
+
+        Evaluator evaluator = new Evaluator();
+
+        // test lambda as parameter. works surprisingly well
+        double[] someData = new double[]{1.0, 2.0, 3.0, 4.0, 5.0};
+        Operation op = (a) -> a * someData[0] + a * someData[1] + a * someData[2];
+        double res = evaluator.performOperation(5, op);
+
+        System.out.println(res);
     }
+
+
 }
