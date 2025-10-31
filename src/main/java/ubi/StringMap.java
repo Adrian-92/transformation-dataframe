@@ -28,7 +28,7 @@ public final class StringMap {
         return data;
     }
 
-    public int get(String key) {
+    public Integer get(String key) {
         return this.data.get(key);
     }
 }

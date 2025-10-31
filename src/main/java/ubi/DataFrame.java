@@ -5,9 +5,16 @@ import java.util.HashMap;
 /**
  * mapping of id to operation
  */
-public class DataFrame {
-
+public final class DataFrame {
+    private static DataFrame INSTANCE;
     private final HashMap<Integer, Operation> data;
+
+    public synchronized static DataFrame getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new DataFrame();
+        }
+        return INSTANCE;
+    }
 
     public DataFrame() {
         this.data = new HashMap<>();
