@@ -1,4 +1,6 @@
-package ubi;
+package ubi.data;
+
+import ubi.operations.Operation;
 
 import java.util.HashMap;
 

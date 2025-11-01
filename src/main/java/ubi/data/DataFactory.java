@@ -1,4 +1,6 @@
-package ubi;
+package ubi.data;
+
+import ubi.operations.Operation;
 
 /**
  * takes name and operation and maps to (counter-)id

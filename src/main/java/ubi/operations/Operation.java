@@ -1,4 +1,4 @@
-package ubi;
+package ubi.operations;
 
 /**
  * Takes numbers and performs operation

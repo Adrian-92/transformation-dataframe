@@ -3,6 +3,8 @@ package ubi;
 
 import org.junit.Before;
 import org.junit.Test;
+import ubi.data.DataFactory;
+import ubi.operations.Operation;
 
 import static org.junit.Assert.*;
 
@@ -10,7 +12,7 @@ public class DataFactoryTest {
     DataFactory dataFactory;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         dataFactory = new DataFactory();
     }
 
