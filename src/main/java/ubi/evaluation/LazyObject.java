@@ -2,13 +2,17 @@ package ubi.evaluation;
 
 import ubi.operations.Operation;
 
+import java.util.Objects;
+
 public class LazyObject {
+    private final int id;
     private boolean isEvaluated;
-    private final Operation operation;
+    private Operation operation;
     private double result;
 
 
-    public LazyObject(Operation operation) {
+    public LazyObject(int id, Operation operation) {
+        this.id = id;
         this.isEvaluated = false;
         this.operation = operation;
     }
@@ -21,4 +25,38 @@ public class LazyObject {
         return this.result;
     }
 
+    public boolean isEvaluated() {
+        return isEvaluated;
+    }
+
+    public Operation getOperation() {
+        return operation;
+    }
+
+    public void setOperation(Operation operation) {
+        this.operation = operation;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        LazyObject that = (LazyObject) o;
+        return id == that.id && isEvaluated == that.isEvaluated && Objects.equals(operation, that.operation);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, isEvaluated, operation);
+    }
+
+    @Override
+    public String toString() {
+        return "{id: " + id +
+                " operation: " + operation +
+                '}';
+    }
 }

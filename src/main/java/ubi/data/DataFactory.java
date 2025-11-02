@@ -8,11 +8,11 @@ import ubi.operations.Operation;
 public class DataFactory {
     private static int counter;
 
-    private final DataFrame df;
+    private final OperationMap operationMap;
     private final StringMap stringMap;
 
     public DataFactory() {
-        df = DataFrame.getInstance();
+        operationMap = OperationMap.getInstance();
         stringMap = StringMap.getInstance();
     }
 
@@ -24,7 +24,7 @@ public class DataFactory {
     public void take(int n) {
         int temp = counter;
         for (int i = temp; i < n + temp; i++) {
-            df.put(i, null);
+            operationMap.put(i, null);
             counter++;
         }
     }
@@ -35,11 +35,11 @@ public class DataFactory {
         }
         int temp = counter;
         for (int i = 0; i < temp + 1; i++) {
-            if (df.get(i) != null) {
+            if (operationMap.get(i) != null) {
                 continue;
             }
             stringMap.put(name, i);
-            df.put(i, op);
+            operationMap.put(i, op);
             counter++;
             break;
         }
@@ -51,11 +51,15 @@ public class DataFactory {
         if (key == null) {
             throw new RuntimeException("No such column: " + name);
         }
-        Operation operation = df.get(key);
+        Operation operation = operationMap.get(key);
         if (operation == null) {
             throw new RuntimeException("No such operation: " + name);
         }
         return operation;
+    }
+
+    public StringMap getStringMap() {
+        return stringMap;
     }
 
     public static int getCounter() {

@@ -1,32 +1,47 @@
 package ubi.data;
 
+import ubi.evaluation.LazyObject;
 import ubi.operations.Operation;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- * mapping of id to operation
- */
-public final class DataFrame {
-    private static DataFrame INSTANCE;
-    private final HashMap<Integer, Operation> data;
 
-    public synchronized static DataFrame getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new DataFrame();
-        }
-        return INSTANCE;
-    }
+public class DataFrame {
+
+    private final List<LazyObject> data;
+    private final DataFactory dataFactory;
+
 
     public DataFrame() {
-        this.data = new HashMap<>();
+        this.data = new ArrayList<>();
+        this.dataFactory = new DataFactory();
     }
 
-    public void put(int position, Operation op) {
-        data.put(position, op);
+    public void apply(String name, Operation operation) {
+        dataFactory.apply(name, operation);
+        int id = getId(name);
+        LazyObject obj = new LazyObject(id, operation);
+        data.add(obj);
     }
 
-    public Operation get(int position) {
-        return data.get(position);
+    public void take(int n) {
+        dataFactory.take(n);
+    }
+
+    public int getId(String name) {
+        return dataFactory.getStringMap().get(name);
+    }
+
+    public LazyObject getLazyObject(String name) {
+        int id = getId(name);
+        return data.stream().filter(i -> i.getId() == id).findFirst().orElse(null);
+    }
+
+    @Override
+    public String toString() {
+        return "DataFrame{" +
+                "data=" + data +
+                '}';
     }
 }
