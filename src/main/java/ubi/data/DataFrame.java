@@ -18,10 +18,10 @@ public class DataFrame {
         this.dataFactory = new DataFactory();
     }
 
-    public void apply(String name, Operation operation) {
+    public void apply(String name, String operationString, Operation operation) {
         dataFactory.apply(name, operation);
         int id = getId(name);
-        LazyObject obj = new LazyObject(id, operation);
+        LazyObject obj = new LazyObject(id, operationString, operation);
         data.add(obj);
     }
 
@@ -40,7 +40,7 @@ public class DataFrame {
 
     @Override
     public String toString() {
-        return "DataFrame{" +
+        return "{" +
                 "data=" + data +
                 '}';
     }

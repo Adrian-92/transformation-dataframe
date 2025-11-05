@@ -22,6 +22,7 @@ public class DataFactory {
      * @param n number of reserved space
      */
     public void take(int n) {
+        // shouldn't this take only generated functions?
         int temp = counter;
         for (int i = temp; i < n + temp; i++) {
             operationMap.put(i, null);
@@ -31,6 +32,8 @@ public class DataFactory {
 
     public void apply(String name, Operation op) {
         if (stringMap.get(name) != null) {
+            // here you would set a new name
+            // maybe there needs to be a separate function?
             throw new RuntimeException("Duplicate key");
         }
         int temp = counter;

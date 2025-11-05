@@ -8,13 +8,15 @@ public class LazyObject {
     private final int id;
     private boolean isEvaluated;
     private Operation operation;
+    private String operationString;
     private double result;
 
 
-    public LazyObject(int id, Operation operation) {
+    public LazyObject(int id, String operationString, Operation operation) {
         this.id = id;
         this.isEvaluated = false;
         this.operation = operation;
+        this.operationString = operationString;
     }
 
     public double evaluate(double a) {
@@ -23,6 +25,14 @@ public class LazyObject {
             this.isEvaluated = true;
         }
         return this.result;
+    }
+
+    public void setOperationString(String operationString) {
+        this.operationString = operationString;
+    }
+
+    public String getOperationString() {
+        return operationString;
     }
 
     public boolean isEvaluated() {
@@ -56,7 +66,7 @@ public class LazyObject {
     @Override
     public String toString() {
         return "{id: " + id +
-                " operation: " + operation +
+                " operation: " + operationString +
                 '}';
     }
 }
