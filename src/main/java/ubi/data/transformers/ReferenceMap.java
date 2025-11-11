@@ -1,22 +1,22 @@
-package ubi.data;
+package ubi.data.transformers;
 
 import java.util.HashMap;
 
 /**
  * mapping of name to id
  */
-public final class StringMap {
-    private static StringMap INSTANCE;
+public final class ReferenceMap {
+    private static ReferenceMap INSTANCE;
     private final HashMap<String, Integer> data;
 
-    public synchronized static StringMap getInstance() {
+    public synchronized static ReferenceMap getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new StringMap();
+            INSTANCE = new ReferenceMap();
         }
         return INSTANCE;
     }
 
-    public StringMap() {
+    private ReferenceMap() {
         this.data = new HashMap<>();
     }
 
