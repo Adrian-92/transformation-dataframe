@@ -5,6 +5,8 @@ package ubi.data.transformers;
  * a transformer is the combination of string to id map and id to function map
  */
 public final class TransformerRegister {
+    // the one and only holy id of operations
+    static int id;
     private final OperationMap operationMap;
     final ReferenceMap refMap;
 
@@ -15,6 +17,7 @@ public final class TransformerRegister {
         refMap = new ReferenceMap();
     }
 
+    // it is import that this register is unique
     public synchronized static TransformerRegister getInstance() {
         if (instance == null) {
             instance = new TransformerRegister();
@@ -27,7 +30,7 @@ public final class TransformerRegister {
 
     }
 
-    public RowNameWrapper getTransformer() {
+    public Transformer getTransformer() {
         return null;
     }
 

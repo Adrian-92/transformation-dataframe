@@ -5,12 +5,12 @@ import ubi.data.LazyRow;
 
 import ubi.operations.Operation;
 
-public class RowNameWrapper {
+public class Transformer {
     private final DataFrame df;
     // deep copy of last state before adding this
     private final ReferenceMap references;
 
-    public RowNameWrapper(DataFrame df) {
+    public Transformer(DataFrame df) {
         this.df = df;
         this.references = TransformerFactory.cloneMap(TransformerRegister.getInstance());
     }

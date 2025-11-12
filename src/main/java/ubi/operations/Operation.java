@@ -1,11 +1,11 @@
 package ubi.operations;
 
-import ubi.data.transformers.RowNameWrapper;
+import ubi.data.transformers.Transformer;
 
 /**
  * Takes numbers and performs operation
  */
 @FunctionalInterface
 public interface Operation {
-    double execute(RowNameWrapper input);
+    double execute(Transformer input);
 }

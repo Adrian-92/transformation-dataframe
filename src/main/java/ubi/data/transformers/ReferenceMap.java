@@ -13,9 +13,17 @@ public class ReferenceMap {
         this.data = new HashMap<>();
     }
 
+
+    // important: use this only for deep copy of list
     public void put(String key, Integer id) {
         this.data.put(key, id);
     }
+
+    // use this when adding new transformer
+    public void put(String key) {
+        this.data.put(key, ++TransformerRegister.id);
+    }
+
 
     public HashMap<String, Integer> getData() {
         return data;

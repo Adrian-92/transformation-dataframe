@@ -22,8 +22,10 @@ public final class OperationMap {
         this.data = new HashMap<>();
     }
 
-    public void put(int position, Operation op) {
-        data.put(position, op);
+
+    // TODO: get id from Transformer Register
+    public void put(int id, Operation op) {
+        data.put(id, op);
     }
 
     public Operation get(int position) {

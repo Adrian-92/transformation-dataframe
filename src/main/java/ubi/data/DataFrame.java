@@ -2,6 +2,7 @@ package ubi.data;
 
 import ubi.data.transformers.OperationMap;
 import ubi.data.transformers.ReferenceMap;
+import ubi.data.transformers.Transformer;
 import ubi.data.transformers.TransformerRegister;
 
 public class DataFrame {
@@ -24,7 +25,11 @@ public class DataFrame {
 
     void setTransformer(String name) {
         ReferenceMap refMap = register.getRefMap();
-        OperationMap operationMap = register.getOperationMap();
+
+    }
+
+    Transformer getTransformer(String name) {
+        return null;
     }
 
 
