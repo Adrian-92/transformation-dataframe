@@ -12,7 +12,9 @@ public class Column {
     }
 
     public void set(Map<Map<String, Object>, Object> function, boolean override) {
-        if(!override||master.hasTransformer(name)){}
+        if (!override || !master.hasTransformer(name)) {
+
+        }
 
     }
 

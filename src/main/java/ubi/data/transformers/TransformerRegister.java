@@ -1,17 +1,18 @@
 package ubi.data.transformers;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * holds all transformers at time
+ * a transformer is the combination of string to id map and id to function map
  */
 public final class TransformerRegister {
-    private final List<Transformer> transformers;
+    private final OperationMap operationMap;
+    final ReferenceMap refMap;
+
     private static TransformerRegister instance;
 
     private TransformerRegister() {
-        this.transformers = new ArrayList<>();
+        operationMap = new OperationMap();
+        refMap = new ReferenceMap();
     }
 
     public synchronized static TransformerRegister getInstance() {
@@ -22,11 +23,19 @@ public final class TransformerRegister {
 
     }
 
-    public void addTransformer(Transformer transformer) {
-        this.transformers.add(transformer);
+    public void add() {
+
     }
 
-    public Transformer getTransformer(String name) {
+    public RowNameWrapper getTransformer() {
         return null;
+    }
+
+    public OperationMap getOperationMap() {
+        return operationMap;
+    }
+
+    public ReferenceMap getRefMap() {
+        return refMap;
     }
 }

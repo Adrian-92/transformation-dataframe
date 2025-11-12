@@ -5,18 +5,11 @@ import java.util.HashMap;
 /**
  * mapping of name to id
  */
-public final class ReferenceMap {
-    private static ReferenceMap INSTANCE;
+public class ReferenceMap {
     private final HashMap<String, Integer> data;
 
-    public synchronized static ReferenceMap getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new ReferenceMap();
-        }
-        return INSTANCE;
-    }
 
-    private ReferenceMap() {
+    ReferenceMap() {
         this.data = new HashMap<>();
     }
 

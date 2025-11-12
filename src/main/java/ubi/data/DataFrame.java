@@ -1,22 +1,31 @@
 package ubi.data;
 
+import ubi.data.transformers.OperationMap;
+import ubi.data.transformers.ReferenceMap;
 import ubi.data.transformers.TransformerRegister;
 
 public class DataFrame {
-    private final TransformerRegister register;
+    final TransformerRegister register;
 
     public DataFrame() {
         register = TransformerRegister.getInstance();
     }
 
-    public Column getCol(String name) {
-        return new Column(name, this);
+    public void getCol(String name) {
+
+        Column col = new Column(name, this);
+
     }
 
 
-    private boolean hasTransformer(String name) {
+    boolean hasTransformer(String name) {
         return false;
     }
 
-    ;
+    void setTransformer(String name) {
+        ReferenceMap refMap = register.getRefMap();
+        OperationMap operationMap = register.getOperationMap();
+    }
+
+
 }

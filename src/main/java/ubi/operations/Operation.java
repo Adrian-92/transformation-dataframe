@@ -1,6 +1,6 @@
 package ubi.operations;
 
-import ubi.data.RowNameWrapper;
+import ubi.data.transformers.RowNameWrapper;
 
 /**
  * Takes numbers and performs operation
