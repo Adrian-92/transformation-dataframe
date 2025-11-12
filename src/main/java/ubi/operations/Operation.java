@@ -7,5 +7,6 @@ import ubi.data.Transformer;
  */
 @FunctionalInterface
 public interface Operation {
-    double execute(Transformer input);
+    // TODO: make this like a callable list
+    double execute(double input);
 }

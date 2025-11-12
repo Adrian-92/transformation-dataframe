@@ -8,9 +8,7 @@ import java.util.List;
  * a transformer is the combination of string to id map and id to function map
  */
 public final class TransformerRegister {
-    // the one and only holy id of operations
-
-
+    static int id;
     private static TransformerRegister instance;
     private static List<Transformer> transformers;
 
@@ -27,7 +25,7 @@ public final class TransformerRegister {
 
     }
 
-    public void add(Transformer transformer) {
+    public static void add(Transformer transformer) {
         transformers.add(transformer);
     }
 

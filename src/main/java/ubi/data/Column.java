@@ -3,11 +3,11 @@ package ubi.data;
 import ubi.operations.Operation;
 
 public class Column {
-    private DataFrame master;
+    private DataFrame df;
     private String name;
 
-    public Column(String name, DataFrame master) {
-        this.master = master;
+    public Column(String name, DataFrame df) {
+        this.df = df;
         this.name = name;
     }
 
@@ -21,13 +21,12 @@ public class Column {
     }
 
     private void setHelper(Operation function, boolean override) {
-        if (!override || !master.hasTransformer(name)) {
-            master.setTransformer(name);
+        if (!override || !df.hasTransformer(name)) {
+            df.setTransformer(name);
         } else {
-            new Transformer(master);
-
+            new Transformer(df, function);
         }
-        // TODO: Set operation in lambda
+        df.getTransformer(name).setLambda(function);
     }
 
 }

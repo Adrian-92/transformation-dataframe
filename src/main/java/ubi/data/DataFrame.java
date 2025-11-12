@@ -1,8 +1,7 @@
 package ubi.data;
 
 public class DataFrame {
-    // TODO: hide id in package (later, but important!)
-    public static int id;
+
     private final TransformerRegister register;
     private final OperationMap operationMap;
     private final ReferenceMap refMap;
@@ -13,12 +12,18 @@ public class DataFrame {
         refMap = new ReferenceMap();
     }
 
+    // this one will be visible from outside
     public Column getCol(String name) {
         return new Column(name, this);
     }
 
+
+
+    /* ########################################################################### */
+
+    // TODO: from here not visible from outside (later)
     boolean hasTransformer(String name) {
-        return false;
+        return refMap.getData().get(name) != null;
     }
 
     void setTransformer(String name) {
@@ -28,5 +33,13 @@ public class DataFrame {
         return null;
     }
 
+    ReferenceMap cloneTransformerMap() {
+        ReferenceMap deepCopy = new ReferenceMap();
+        for (String key : refMap.getData().keySet()) {
+            deepCopy.put(key, refMap.get(key));
+        }
+        return deepCopy;
+
+    }
 
 }

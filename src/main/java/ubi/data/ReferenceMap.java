@@ -21,7 +21,7 @@ public class ReferenceMap {
 
     // use this when adding new transformer
     public void put(String key) {
-        this.data.put(key, ++DataFrame.id);
+        this.data.put(key, ++TransformerRegister.id);
     }
 
 
