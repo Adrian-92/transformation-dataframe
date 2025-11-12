@@ -1,4 +1,7 @@
-package ubi.data.transformers;
+package ubi.data;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * holds all transformers at time
@@ -6,15 +9,13 @@ package ubi.data.transformers;
  */
 public final class TransformerRegister {
     // the one and only holy id of operations
-    static int id;
-    private final OperationMap operationMap;
-    final ReferenceMap refMap;
+
 
     private static TransformerRegister instance;
+    private static List<Transformer> transformers;
 
     private TransformerRegister() {
-        operationMap = new OperationMap();
-        refMap = new ReferenceMap();
+        transformers = new ArrayList<>();
     }
 
     // it is import that this register is unique
@@ -26,19 +27,9 @@ public final class TransformerRegister {
 
     }
 
-    public void add() {
-
+    public void add(Transformer transformer) {
+        transformers.add(transformer);
     }
 
-    public Transformer getTransformer() {
-        return null;
-    }
 
-    public OperationMap getOperationMap() {
-        return operationMap;
-    }
-
-    public ReferenceMap getRefMap() {
-        return refMap;
-    }
 }

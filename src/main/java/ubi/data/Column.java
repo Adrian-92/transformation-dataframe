@@ -1,9 +1,6 @@
 package ubi.data;
 
-import ubi.data.transformers.Transformer;
 import ubi.operations.Operation;
-
-import java.util.Map;
 
 public class Column {
     private DataFrame master;
@@ -14,12 +11,21 @@ public class Column {
         this.name = name;
     }
 
+    private void set(Operation function, boolean override) {
+        setHelper(function, override);
+    }
 
-    public void set(Operation function, boolean override) {
+    // default value is false for override. change it here if necessary
+    private void set(Operation function) {
+        setHelper(function, false);
+    }
+
+    private void setHelper(Operation function, boolean override) {
         if (!override || !master.hasTransformer(name)) {
             master.setTransformer(name);
         } else {
             new Transformer(master);
+
         }
         // TODO: Set operation in lambda
     }

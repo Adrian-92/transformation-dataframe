@@ -1,4 +1,4 @@
-package ubi.data.transformers;
+package ubi.data;
 
 public class TransformerFactory {
 

@@ -1,4 +1,4 @@
-package ubi.data.transformers;
+package ubi.data;
 
 import ubi.operations.Operation;
 

@@ -1,6 +1,6 @@
 package ubi.operations;
 
-import ubi.data.transformers.Transformer;
+import ubi.data.Transformer;
 
 /**
  * Takes numbers and performs operation

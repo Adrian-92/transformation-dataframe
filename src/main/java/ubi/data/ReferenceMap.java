@@ -1,4 +1,4 @@
-package ubi.data.transformers;
+package ubi.data;
 
 import java.util.HashMap;
 
@@ -9,7 +9,7 @@ public class ReferenceMap {
     private final HashMap<String, Integer> data;
 
 
-    ReferenceMap() {
+    public ReferenceMap() {
         this.data = new HashMap<>();
     }
 
@@ -21,7 +21,7 @@ public class ReferenceMap {
 
     // use this when adding new transformer
     public void put(String key) {
-        this.data.put(key, ++TransformerRegister.id);
+        this.data.put(key, ++DataFrame.id);
     }
 
 
