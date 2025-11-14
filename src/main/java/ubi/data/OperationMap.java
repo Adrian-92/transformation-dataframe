@@ -28,7 +28,7 @@ public final class OperationMap {
         data.put(id, op);
     }
 
-    public Operation get(int position) {
-        return data.get(position);
+    public Operation get(int id) {
+        return data.get(id);
     }
 }

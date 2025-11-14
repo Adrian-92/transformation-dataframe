@@ -11,20 +11,20 @@ public class Column {
         this.name = name;
     }
 
-    private void set(Operation function, boolean override) {
+    public void set(Operation function, boolean override) {
         setHelper(function, override);
     }
 
     // default value is false for override. change it here if necessary
-    private void set(Operation function) {
+    public void set(Operation function) {
         setHelper(function, false);
     }
 
     private void setHelper(Operation function, boolean override) {
-        if (!override || !df.hasTransformer(name)) {
+        if (override || df.hasTransformer(name)) {
             df.setTransformer(name);
         } else {
-            new Transformer(df, function);
+            new Transformer(df, function, name);
         }
         df.getTransformer(name).setLambda(function);
     }

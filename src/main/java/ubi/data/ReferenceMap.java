@@ -5,10 +5,17 @@ import java.util.HashMap;
 /**
  * mapping of name to id
  */
-public class ReferenceMap {
+public final class ReferenceMap {
+    private static ReferenceMap INSTANCE;
     private final HashMap<String, Integer> data;
 
-
+    public synchronized static ReferenceMap getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new ReferenceMap();
+        }
+        return INSTANCE;
+    }
+    // important: use this only for deep copy of list!
     public ReferenceMap() {
         this.data = new HashMap<>();
     }

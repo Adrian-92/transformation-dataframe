@@ -2,14 +2,10 @@ package ubi.data;
 
 public class DataFrame {
 
-    private final TransformerRegister register;
-    private final OperationMap operationMap;
     private final ReferenceMap refMap;
 
     public DataFrame() {
-        register = TransformerRegister.getInstance();
-        operationMap = OperationMap.getInstance();
-        refMap = new ReferenceMap();
+        refMap = ReferenceMap.getInstance();
     }
 
     // this one will be visible from outside
@@ -27,11 +23,13 @@ public class DataFrame {
     }
 
     void setTransformer(String name) {
+        getTransformer(name).setName(name);
     }
 
     Transformer getTransformer(String name) {
-        return null;
+        return TransformerRegister.getTransformer(name);
     }
+
 
     ReferenceMap cloneTransformerMap() {
         ReferenceMap deepCopy = new ReferenceMap();
