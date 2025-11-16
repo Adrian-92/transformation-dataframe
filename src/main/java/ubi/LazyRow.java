@@ -1,24 +1,31 @@
 package ubi;
 
 import java.util.Map;
-import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class LazyRow {
 
-    Map<Integer, Objects> values;
-    boolean[] evaluated;
+    // Cache storing computed values
+    Map<Integer, Object> values = new ConcurrentHashMap<>();
 
-
-    Object get(int transId) {
-        if (!has(transId)) {
-            TransformerRegister.get(transId).eval(this);
+    // Asynchronously retrieves a column's value by its Transformer ID
+    public CompletableFuture<Object> get(int transId) {
+        if (has(transId)) {
+            // Cache hit: returns immediately completed Future.
+            return CompletableFuture.completedFuture(values.get(transId));
         }
-        return values.get(transId);
+        // Cache miss: triggers asynchronous evaluation via the Transformer.
+        return TransformerRegister.get(transId).eval(this);
     }
 
     boolean has(int transId) {
+        // Checks if the value is already in the cache.
         return values.containsKey(transId);
     }
 
-    void set(int transId, Object value) {}
+    // Saves the result into the cache after successful evaluation.
+    void set(int transId, Object value) {
+        values.put(transId, value);
+    }
 }

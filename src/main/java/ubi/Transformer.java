@@ -1,8 +1,7 @@
 package ubi;
 
-import ubi.lambda.Lambda_One;
-
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 public class Transformer {
 
@@ -17,18 +16,22 @@ public class Transformer {
         TransformerRegister.add(this);
     }
 
-    void eval(LazyRow row) {
+    public CompletableFuture<Object> eval(LazyRow row) {
         if (row.has(getTransId())) {
-            row.set(getTransId(), function.execute(new RowNameWrapper(references, row)));
+            // Cache hit: returns the cached value immediately
+            return CompletableFuture.completedFuture(row.get(getTransId()));
         }
+        // Cache miss: executes the function, which handles fetching dependencies
+        CompletableFuture<Object> resultFuture = function.execute(new RowNameWrapper(references, row));
+        // When the calculation is complete, cache the result and return it
+        return resultFuture.thenApply(value -> {
+            row.set(getTransId(), value);
+            return value;
+        });
     }
-
 
     public int getTransId() {
         return this.id;
     }
 
-    void setLambda(Lambda_One lambda) {
-        // TODO: apply magic here
-    }
 }

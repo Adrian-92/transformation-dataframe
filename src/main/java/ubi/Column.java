@@ -1,6 +1,8 @@
 package ubi;
 
-import ubi.lambda.Lambda_One;
+import ubi.lambda.Lambda;
+
+import java.util.List;
 
 public class Column {
     private Dataframe master;
@@ -11,28 +13,60 @@ public class Column {
         this.master = master;
     }
 
-    public void set(Lambda_One function, boolean override) {
-        setHelper(function, override);
+    /**
+     * Sets constant value for column (Source Column)
+     * Registers a transformer with no dependencies
+     * use this one as start point for a new column
+     * !!!here will be a better description later!!!
+     *
+     * @param value Constant value for column (for example Double, String)
+     */
+    public void setValue(Object value) {
+
+        // Creates a Lambda that just returns the constant value
+        Lambda constantLambda = inputs -> value;
+
+        // Source column has no dependencies
+        List<String> dependencies = List.of();
+        setHelper(dependencies, constantLambda, false);
     }
 
-    private void setHelper(Lambda_One function) {
-        setHelper(function, false);
+    /**
+     * sets parameters for evaluation
+     * if you have a start point defined use its name as an entry in dependencies
+     * define a function as you like
+     * <p>
+     * !!!here will be a better description later!!!
+     *
+     * @param dependencies defines which columns are needed
+     * @param function     The Lambda function to execute
+     * @param override     names says it
+     */
+    public void set(List<String> dependencies, Lambda function, boolean override) {
+        setHelper(dependencies, function, override);
     }
 
-    private void setHelper(Lambda_One function, boolean override) {
-        if (!override || !master.hasTransformer(name)) { // shouldn't this be the other way around?
-            master.setTransformer(name, function);
-        } else {
-            RowNameWrapper wrapper = new RowNameWrapper();
+    /**
+     * same as above
+     * !!!here will be a better description later!!!
+     *
+     * @param dependencies defines which columns are needed
+     * @param function     The Lambda function to execute
+     */
+    public void set(List<String> dependencies, Lambda function) {
+        setHelper(dependencies, function, false);
+    }
 
-            /*
-            where and how and WHY to get/generate this?
-            // Map<String,Int> refs , LazyRow Map<Integer, Objects>
-            */
-
-            Function f = new Function(); // TODO: apply magic here
-            Transformer t = new Transformer(master, f);
-            t.setLambda(function);
+    private void setHelper(List<String> dependencies, Lambda function, boolean override) {
+        if (master.hasTransformer(name) && !override) {
+            return;
         }
+
+        Function f = new Function(dependencies);
+        f.setLambda(function);
+
+        Transformer t = new Transformer(master, f);
+        master.addTransformer(name, t.getTransId());
+
     }
 }
