@@ -20,13 +20,19 @@ public class Column {
     }
 
     private void setHelper(Lambda_One function, boolean override) {
-        if (!override || !master.hasTransformer(name)) {
-            master.setTransformer(name);
+        if (!override || !master.hasTransformer(name)) { // shouldn't this be the other way around?
+            master.setTransformer(name, function);
         } else {
             RowNameWrapper wrapper = new RowNameWrapper();
+
+            /*
+            where and how and WHY to get/generate this?
+            // Map<String,Int> refs , LazyRow Map<Integer, Objects>
+            */
+
             Function f = new Function(); // TODO: apply magic here
-            new Transformer(master, f);
-            master.getTransformer(name).setLambda(function);
+            Transformer t = new Transformer(master, f);
+            t.setLambda(function);
         }
     }
 }

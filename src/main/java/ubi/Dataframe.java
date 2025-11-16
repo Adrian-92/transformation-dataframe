@@ -1,5 +1,7 @@
 package ubi;
 
+import ubi.lambda.Lambda_One;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,15 +21,12 @@ public class Dataframe {
         return nameToIdReferences.containsKey(name);
     }
 
-    void setTransformer(String name) {
+    void setTransformer(String name, Lambda_One lambda) {
         // TODO: ask what this should do
+        int id = nameToIdReferences.get(name);
+        Transformer t = TransformerRegister.get(id);
+        t.setLambda(lambda);
     }
-
-    Transformer getTransformer(String name) {
-        return null;
-    }
-
-
 
     /**
      * copies map to get a new instance of current state
@@ -39,7 +38,6 @@ public class Dataframe {
         return new HashMap<>(nameToIdReferences);
 
     }
-
 
 
 }
