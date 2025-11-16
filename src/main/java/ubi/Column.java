@@ -3,8 +3,8 @@ package ubi;
 import ubi.lambda.Lambda_One;
 
 public class Column {
-    Dataframe master;
-    String name;
+    private Dataframe master;
+    private String name;
 
     public Column(String name, Dataframe master) {
         this.name = name;
@@ -15,7 +15,7 @@ public class Column {
         setHelper(function, override);
     }
 
-    public void setHelper(Lambda_One function) {
+    private void setHelper(Lambda_One function) {
         setHelper(function, false);
     }
 
@@ -23,6 +23,7 @@ public class Column {
         if (!override || !master.hasTransformer(name)) {
             master.setTransformer(name);
         } else {
+            RowNameWrapper wrapper = new RowNameWrapper();
             Function f = new Function(); // TODO: apply magic here
             new Transformer(master, f);
             master.getTransformer(name).setLambda(function);

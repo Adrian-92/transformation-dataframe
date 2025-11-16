@@ -1,16 +1,24 @@
 package ubi;
 
-import java.util.List;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class TransformerRegister {
-    List<Transformer> transformers;
+
+    private static final AtomicInteger transformerId = new AtomicInteger(0);
+    private final static Map<Integer, Transformer> references = Collections.synchronizedMap(new HashMap<>());
 
     static Transformer get(int transId) {
-        return null;
+        return references.get(transId);
     }
 
     static void add(Transformer transformer) {
-        // TODO: apply magic here
+        references.put(transformer.getTransId(), transformer);
     }
 
+    public static int nextTransformerId() {
+        return transformerId.incrementAndGet();
+    }
 }

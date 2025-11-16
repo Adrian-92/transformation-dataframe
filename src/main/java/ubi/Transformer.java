@@ -5,25 +5,27 @@ import ubi.lambda.Lambda_One;
 import java.util.Map;
 
 public class Transformer {
-    Dataframe df;
+
     Function function;
+    private final int id;
     private final Map<String, Integer> references;
 
     public Transformer(Dataframe df, Function f) {
-        this.references = df.copyReferences(); // TODO: deep copy here
-        this.df = df;
+        this.references = df.copyReferences();
         this.function = f;
+        this.id = TransformerRegister.nextTransformerId();
+        TransformerRegister.add(this);
     }
 
     void eval(LazyRow row) {
         if (row.has(getTransId())) {
-
+            row.set(getTransId(), function.execute(new RowNameWrapper(references, row)));
         }
     }
 
 
-    int getTransId() {
-        return 0;
+    public int getTransId() {
+        return this.id;
     }
 
     void setLambda(Lambda_One lambda) {
