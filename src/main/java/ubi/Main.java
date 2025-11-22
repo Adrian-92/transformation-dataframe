@@ -12,7 +12,7 @@ public class Main {
         Dataframe df = new Dataframe();
 
         init(df);
-        testB(df);
+        testTake(df);
     }
 
     public static void init(Dataframe df) {
@@ -79,43 +79,11 @@ public class Main {
         }
     }
 
-    public static void testB(Dataframe df) {
 
-        System.out.println("---------------------------------");
-
-        // FIXME: this will be the take method
-        // for now its just a test
-
+    public static void testTake(Dataframe df) {
+        System.out.println("------------------------------");
         final int executionCount = 1000;
-        // just to take a look at the time
-        long startTime = System.currentTimeMillis();
-
-
-        for (int i = 1; i <= executionCount; i++) {
-            System.out.printf("\nRow %d / %d started\n", i, executionCount);
-
-            // each row must instantiate a new lazy row
-            // this is kind of caching
-            LazyRow currentRow = new LazyRow();
-
-            RowNameWrapper rowWrapper = new RowNameWrapper(df.copyReferences(), currentRow);
-
-            CompletableFuture<Object> resultFuture = rowWrapper.get("D");
-
-            try {
-                Object result = resultFuture.join();
-                System.out.printf("Row %d finished, result: %.1f\n", i, (Double) result);
-            } catch (Exception e) {
-                System.err.println("Error in row " + i + ": " + e.getMessage());
-            }
-        }
-
-        long endTime = System.currentTimeMillis();
-        long duration = endTime - startTime;
-
-        System.out.println("\n---------------------------------");
-        System.out.printf("All %d rows done\n", executionCount);
-        System.out.printf("time: %d ms\n", duration);
-        System.out.println("---------------------------------");
+        Object result = df.take("D",executionCount);
+        System.out.println("Transformer D got: " + result);
     }
 }

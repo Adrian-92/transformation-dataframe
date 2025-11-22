@@ -3,8 +3,7 @@ package ubi;
 import ubi.lambda.Lambda;
 
 import java.util.List;
-
-public class Column {
+ class Column {
     private Dataframe master;
     private String name;
 
@@ -21,7 +20,7 @@ public class Column {
      *
      * @param value Constant value for column (for example Double, String)
      */
-    public void setValue(Object value) {
+    void setValue(Object value) {
 
         // Creates a Lambda that just returns the constant value
         Lambda constantLambda = inputs -> value;
@@ -42,7 +41,7 @@ public class Column {
      * @param function     The Lambda function to execute
      * @param override     names says it
      */
-    public void set(List<String> dependencies, Lambda function, boolean override) {
+    void set(List<String> dependencies, Lambda function, boolean override) {
         setHelper(dependencies, function, override);
     }
 
@@ -53,7 +52,7 @@ public class Column {
      * @param dependencies defines which columns are needed
      * @param function     The Lambda function to execute
      */
-    public void set(List<String> dependencies, Lambda function) {
+    void set(List<String> dependencies, Lambda function) {
         setHelper(dependencies, function, false);
     }
 

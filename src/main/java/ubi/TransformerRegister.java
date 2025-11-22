@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class TransformerRegister {
+class TransformerRegister {
 
     private static final AtomicInteger transformerId = new AtomicInteger(0);
     private final static Map<Integer, Transformer> references = Collections.synchronizedMap(new HashMap<>());
@@ -18,7 +18,7 @@ public class TransformerRegister {
         references.put(transformer.getTransId(), transformer);
     }
 
-    public static int nextTransformerId() {
+    static int nextTransformerId() {
         return transformerId.incrementAndGet();
     }
 }

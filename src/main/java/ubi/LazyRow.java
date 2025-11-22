@@ -4,13 +4,13 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class LazyRow {
+class LazyRow {
 
     // Cache storing computed values
     Map<Integer, Object> values = new ConcurrentHashMap<>();
 
     // Asynchronously retrieves a column's value by its Transformer ID
-    public CompletableFuture<Object> get(int transId) {
+    CompletableFuture<Object> get(int transId) {
         if (has(transId)) {
             // Cache hit: returns immediately completed Future.
             return CompletableFuture.completedFuture(values.get(transId));

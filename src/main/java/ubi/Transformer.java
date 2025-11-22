@@ -3,7 +3,7 @@ package ubi;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-public class Transformer {
+class Transformer {
 
     Function function;
     private final int id;
@@ -16,7 +16,7 @@ public class Transformer {
         TransformerRegister.add(this);
     }
 
-    public CompletableFuture<Object> eval(LazyRow row) {
+    CompletableFuture<Object> eval(LazyRow row) {
         if (row.has(getTransId())) {
             // Cache hit: returns the cached value immediately
             return CompletableFuture.completedFuture(row.get(getTransId()));
@@ -30,7 +30,7 @@ public class Transformer {
         });
     }
 
-    public int getTransId() {
+    int getTransId() {
         return this.id;
     }
 
