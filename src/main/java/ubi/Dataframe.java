@@ -1,6 +1,8 @@
 package ubi;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
@@ -17,15 +19,17 @@ public class Dataframe {
     }
 
     /**
+     * Executes the evaluation for a specified column across n simulated rows
+     * and collects all results.
      *
-     * @param n number if iterations the dataframe should calculate
-     * @return resulting Object either as NaN or the (to number) castable object
-     *
+     * @param name The name of the column to evaluate.
+     * @param n The number of rows to process.
+     * @return A list containing the result (Object) for each of the 'n' rows.
      */
-    public Object take(String name, int n)  {
+    public List<Object> take(String name, int n) {
         // maybe just init as null?
         // this is to
-        Object result = Double.NaN;
+        List<Object> results = new ArrayList<>(n);
         for (int i = 1; i <= n; i++) {
             // each row must instantiate a new lazy row
             // this is kind of caching
@@ -34,9 +38,10 @@ public class Dataframe {
             RowNameWrapper rowWrapper = new RowNameWrapper(copyReferences(), currentRow);
 
             CompletableFuture<Object> resultFuture = rowWrapper.get(name);
-            result = resultFuture.join();
+            Object result = resultFuture.join();
+            results.add(result);
         }
-        return result;
+        return results;
     }
 
     boolean hasTransformer(String name) {

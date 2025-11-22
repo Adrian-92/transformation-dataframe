@@ -82,8 +82,8 @@ public class Main {
 
     public static void testTake(Dataframe df) {
         System.out.println("------------------------------");
-        final int executionCount = 1000;
-        Object result = df.take("D",executionCount);
+        final int executionCount = 100;
+        List<Object> result = df.take("A",executionCount);
         System.out.println("Transformer D got: " + result);
     }
 }

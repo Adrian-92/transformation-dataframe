@@ -3,9 +3,10 @@ package ubi;
 import ubi.lambda.Lambda;
 
 import java.util.List;
- class Column {
-    private Dataframe master;
-    private String name;
+
+public class Column {
+    private final Dataframe master;
+    private final String name;
 
     public Column(String name, Dataframe master) {
         this.name = name;

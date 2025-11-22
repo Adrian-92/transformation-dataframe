@@ -4,8 +4,8 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 class RowNameWrapper {
-    private Map<String, Integer> references;
-    private LazyRow row;
+    private final Map<String, Integer> references;
+    private final LazyRow row;
 
 
     public RowNameWrapper(Map<String, Integer> references, LazyRow row) {
