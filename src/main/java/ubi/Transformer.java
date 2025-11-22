@@ -9,7 +9,7 @@ class Transformer {
     private final int id;
     private final Map<String, Integer> references;
 
-    public Transformer(Dataframe df, Function f) {
+    Transformer(Dataframe df, Function f) {
         this.references = df.copyReferences();
         this.function = f;
         this.id = TransformerRegister.nextTransformerId();

@@ -8,7 +8,7 @@ class RowNameWrapper {
     private final LazyRow row;
 
 
-    public RowNameWrapper(Map<String, Integer> references, LazyRow row) {
+    RowNameWrapper(Map<String, Integer> references, LazyRow row) {
         this.references = references;
         this.row = row;
     }

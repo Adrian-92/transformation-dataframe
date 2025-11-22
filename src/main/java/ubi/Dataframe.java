@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * here should be a vast explanation what this thing does
+ */
 public class Dataframe {
 
     private final Map<String, Integer> nameToIdReferences;
@@ -14,6 +17,12 @@ public class Dataframe {
         nameToIdReferences = new HashMap<>();
     }
 
+    /**
+     * Initializes a column with given name in its dataframe.
+     *
+     * @param name defines the name of the column.
+     * @return returns column which can be processed.
+     */
     public Column getCol(String name) {
         return new Column(name, this);
     }
@@ -23,7 +32,7 @@ public class Dataframe {
      * and collects all results.
      *
      * @param name The name of the column to evaluate.
-     * @param n The number of rows to process.
+     * @param n    The number of rows to process.
      * @return A list containing the result (Object) for each of the 'n' rows.
      */
     public List<Object> take(String name, int n) {

@@ -7,10 +7,12 @@ import java.util.List;
 public class Column {
     private final Dataframe master;
     private final String name;
+    private List<String> dependencies;
 
     public Column(String name, Dataframe master) {
         this.name = name;
         this.master = master;
+        this.dependencies = List.of();
     }
 
     /**
@@ -21,15 +23,38 @@ public class Column {
      *
      * @param value Constant value for column (for example Double, String)
      */
-    void setValue(Object value) {
-
+    public void set(Object value) {
         // Creates a Lambda that just returns the constant value
         Lambda constantLambda = inputs -> value;
-
-        // Source column has no dependencies
-        List<String> dependencies = List.of();
-        setHelper(dependencies, constantLambda, false);
+        // Source column has no dependencies - see constructor
+        setHelper(constantLambda, false);
     }
+
+    public void setDependencies(List<String> dependencies) {
+        this.dependencies = dependencies;
+    }
+
+    /**
+     * TODO: this one needs some fixes, and I need the right idea
+     * !!!here will be a better description later!!!
+     *
+     * @param function     The Lambda function to execute
+     * @param override     names says it
+     */
+    public void set(Lambda function, boolean override) {
+        setHelper(function, override);
+    }
+
+    /**
+     * TODO: this one needs some fixes, and I need the right idea
+     * !!!here will be a better description later!!!
+     *
+     * @param function     The Lambda function to execute
+     */
+    public void set(Lambda function) {
+        setHelper(function, false);
+    }
+
 
     /**
      * sets parameters for evaluation
@@ -42,8 +67,9 @@ public class Column {
      * @param function     The Lambda function to execute
      * @param override     names says it
      */
-    void set(List<String> dependencies, Lambda function, boolean override) {
-        setHelper(dependencies, function, override);
+    public void set(List<String> dependencies, Lambda function, boolean override) {
+        setDependencies(dependencies);
+        setHelper(function, override);
     }
 
     /**
@@ -53,11 +79,12 @@ public class Column {
      * @param dependencies defines which columns are needed
      * @param function     The Lambda function to execute
      */
-    void set(List<String> dependencies, Lambda function) {
-        setHelper(dependencies, function, false);
+    public void set(List<String> dependencies, Lambda function) {
+        setDependencies(dependencies);
+        setHelper(function, false);
     }
 
-    private void setHelper(List<String> dependencies, Lambda function, boolean override) {
+    private void setHelper(Lambda function, boolean override) {
         if (master.hasTransformer(name) && !override) {
             return;
         }

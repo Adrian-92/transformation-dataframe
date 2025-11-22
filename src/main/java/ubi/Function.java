@@ -7,22 +7,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-public class Function {
+class Function {
 
     private Lambda lambda;
     private final List<String> requiredInputs;
 
-    public Function(List<String> requiredInputs) {
+    Function(List<String> requiredInputs) {
         this.requiredInputs = requiredInputs;
     }
 
-    public void setLambda(Lambda lambda) {
+    void setLambda(Lambda lambda) {
         this.lambda = lambda;
     }
 
 
-    public CompletableFuture<Object> execute(RowNameWrapper rowNameWrapper) {
-
+    CompletableFuture<Object> execute(RowNameWrapper rowNameWrapper) {
+        if (requiredInputs.isEmpty()) {
+            // fallback if there are no dependencies set in column
+            return CompletableFuture.completedFuture(null);
+        }
         // Collect all necessary dependency CompletableFutures
         List<CompletableFuture<Object>> dependencyFutures = requiredInputs.stream()
                 // Each get call starts a recursive/lazy evaluation chain
