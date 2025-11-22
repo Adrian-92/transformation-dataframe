@@ -22,10 +22,6 @@ class Function {
 
 
     CompletableFuture<Object> execute(RowNameWrapper rowNameWrapper) {
-        if (requiredInputs.isEmpty()) {
-            // fallback if there are no dependencies set in column
-            return CompletableFuture.completedFuture(null);
-        }
         // Collect all necessary dependency CompletableFutures
         List<CompletableFuture<Object>> dependencyFutures = requiredInputs.stream()
                 // Each get call starts a recursive/lazy evaluation chain
