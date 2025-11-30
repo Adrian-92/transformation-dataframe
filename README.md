@@ -52,7 +52,7 @@ public class Main {
         List<String> dependenciesD = List.of("C");
         Lambda lambdaD = (Map<String, Object> inputs) -> {
             double c = (Double) inputs.get("C");
-            return c * 3; // 20.0 * 3 = 60.0
+            return c * 3; 
         };
         df.getCol("D").set(dependenciesD, lambdaD);
 
