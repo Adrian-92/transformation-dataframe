@@ -7,7 +7,8 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * here should be a vast explanation what this thing does
+ * Represents a tabular data structure which manages calculation of columns independently.
+ * The calculation will be performed lazy and asynchronous and cached per row
  */
 public class Dataframe {
 
@@ -18,10 +19,11 @@ public class Dataframe {
     }
 
     /**
-     * Initializes a column with given name in its dataframe.
+     * Initializes a column with given name in its dataframe or retrieves a defines column
+     * to define its transformer.
      *
-     * @param name defines the name of the column.
-     * @return returns column which can be processed.
+     * @param name Defines the name of the column.
+     * @return A {@link Column} which can be processed.
      */
     public Column getCol(String name) {
         return new Column(name, this);
@@ -30,14 +32,14 @@ public class Dataframe {
     /**
      * Executes the evaluation for a specified column across n simulated rows
      * and collects all results.
+     * Each row is calculated independently and uses its own cache.
+     * This method blocks until all results are calculated. (using join() from CompletableFuture)
      *
      * @param name The name of the column to evaluate.
      * @param n    The number of rows to process.
-     * @return A list containing the result (Object) for each of the 'n' rows.
+     * @return A list containing the result for each of the 'n' rows.
      */
     public List<Object> take(String name, int n) {
-        // maybe just init as null?
-        // this is to
         List<Object> results = new ArrayList<>(n);
         for (int i = 1; i <= n; i++) {
             // each row must instantiate a new lazy row
@@ -51,6 +53,10 @@ public class Dataframe {
             results.add(result);
         }
         return results;
+    }
+
+    Integer getTransformerId(String name) {
+        return nameToIdReferences.get(name);
     }
 
     boolean hasTransformer(String name) {

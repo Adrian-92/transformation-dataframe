@@ -5,7 +5,7 @@ import java.util.concurrent.CompletableFuture;
 
 class Transformer {
 
-    Function function;
+    private final Function function;
     private final int id;
     private final Map<String, Integer> references;
 

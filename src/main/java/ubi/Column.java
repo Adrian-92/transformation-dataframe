@@ -16,10 +16,9 @@ public class Column {
     }
 
     /**
-     * Sets constant value for column (Source Column)
-     * Registers a transformer with no dependencies
-     * use this one as start point for a new column
-     * !!!here will be a better description later!!!
+     * Sets constant value for column (Source Column).
+     * Registers a transformer with no dependencies.
+     * Use this one as start point for a new column.
      *
      * @param value Constant value for column (for example Double, String)
      */
@@ -30,26 +29,24 @@ public class Column {
         setHelper(constantLambda, false);
     }
 
-    public void setDependencies(List<String> dependencies) {
-        this.dependencies = dependencies;
-    }
+
 
     /**
-     * TODO: this one needs some fixes, and I need the right idea
-     * !!!here will be a better description later!!!
+     * Defines calculation logic for a column.
+     * If override flag is set an existing transformer will be overwritten.
      *
-     * @param function     The Lambda function to execute
-     * @param override     names says it
+     * @param function The {@link Lambda}-Function for calculating column values
+     * @param override if true an existing transformer will be overwritten
      */
     public void set(Lambda function, boolean override) {
         setHelper(function, override);
     }
 
     /**
-     * TODO: this one needs some fixes, and I need the right idea
-     * !!!here will be a better description later!!!
+     * Defines calculation logic for a column without changing its dependencies.
+     * An existing transformer will NOT be overwritten.
      *
-     * @param function     The Lambda function to execute
+     * @param function The {@link Lambda}-Function for calculating column values
      */
     public void set(Lambda function) {
         setHelper(function, false);
@@ -57,15 +54,13 @@ public class Column {
 
 
     /**
-     * sets parameters for evaluation
-     * if you have a start point defined use its name as an entry in dependencies
-     * define a function as you like
-     * <p>
-     * !!!here will be a better description later!!!
+     * Sets dependencies for evaluation and calculation logic for a column.
+     * This is the primary way to define a derived column dependent on other columns.
+     * If override flag is set an existing transformer will be overwritten.
      *
-     * @param dependencies defines which columns are needed
-     * @param function     The Lambda function to execute
-     * @param override     names says it
+     * @param dependencies a list of column names which are needed as input for its {@code function}
+     * @param function The {@link Lambda}-Function for calculating column values
+     * @param override if true an existing transformer will be overwritten
      */
     public void set(List<String> dependencies, Lambda function, boolean override) {
         setDependencies(dependencies);
@@ -73,20 +68,36 @@ public class Column {
     }
 
     /**
-     * same as above
-     * !!!here will be a better description later!!!
+     * Sets dependencies for evaluation and calculation logic for a column
+     * This is the primary way to define a derived column dependent on other columns
+     * an existing transformer will NOT be overwritten
      *
-     * @param dependencies defines which columns are needed
-     * @param function     The Lambda function to execute
+     * @param dependencies a list of column names which are needed as input for its {@code function}
+     * @param function The {@link Lambda}-Function for calculating column values
      */
     public void set(List<String> dependencies, Lambda function) {
         setDependencies(dependencies);
         setHelper(function, false);
     }
 
+    /* ################ Internal helpers ################ */
+
+    private void setDependencies(List<String> dependencies) {
+        this.dependencies = dependencies;
+    }
+
     private void setHelper(Lambda function, boolean override) {
-        if (master.hasTransformer(name) && !override) {
+        boolean exists = master.hasTransformer(name);
+
+        if (exists && !override) {
             return;
+        }
+
+        if (exists && override) {
+            Integer oldTransId = master.getTransformerId(name);
+            if (oldTransId != null) {
+                TransformerRegister.remove(oldTransId);
+            }
         }
 
         Function f = new Function(dependencies);

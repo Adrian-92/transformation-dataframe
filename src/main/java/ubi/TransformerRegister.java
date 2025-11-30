@@ -18,6 +18,10 @@ class TransformerRegister {
         references.put(transformer.getTransId(), transformer);
     }
 
+    static void remove(int transId) {
+        references.remove(transId);
+    }
+
     static int nextTransformerId() {
         return transformerId.incrementAndGet();
     }
