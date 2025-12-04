@@ -16,6 +16,15 @@ class Transformer {
         TransformerRegister.add(this);
     }
 
+    // be cautious with this one
+    Transformer(Dataframe df, Function f, int id) {
+        this.references = df.copyReferences();
+        this.function = f;
+        this.id = id;
+        TransformerRegister.add(this);
+
+    }
+
     CompletableFuture<Object> eval(LazyRow row) {
         if (row.has(getTransId())) {
             // Cache hit: returns the cached value immediately

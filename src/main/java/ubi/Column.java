@@ -30,7 +30,6 @@ public class Column {
     }
 
 
-
     /**
      * Defines calculation logic for a column.
      * If override flag is set an existing transformer will be overwritten.
@@ -59,8 +58,8 @@ public class Column {
      * If override flag is set an existing transformer will be overwritten.
      *
      * @param dependencies a list of column names which are needed as input for its {@code function}
-     * @param function The {@link Lambda}-Function for calculating column values
-     * @param override if true an existing transformer will be overwritten
+     * @param function     The {@link Lambda}-Function for calculating column values
+     * @param override     if true an existing transformer will be overwritten
      */
     public void set(List<String> dependencies, Lambda function, boolean override) {
         setDependencies(dependencies);
@@ -73,7 +72,7 @@ public class Column {
      * an existing transformer will NOT be overwritten
      *
      * @param dependencies a list of column names which are needed as input for its {@code function}
-     * @param function The {@link Lambda}-Function for calculating column values
+     * @param function     The {@link Lambda}-Function for calculating column values
      */
     public void set(List<String> dependencies, Lambda function) {
         setDependencies(dependencies);
@@ -90,21 +89,25 @@ public class Column {
         boolean exists = master.hasTransformer(name);
 
         if (exists && !override) {
+            // hier passiert später etwas anderes
             return;
-        }
-
-        if (exists && override) {
-            Integer oldTransId = master.getTransformerId(name);
-            if (oldTransId != null) {
-                TransformerRegister.remove(oldTransId);
-            }
         }
 
         Function f = new Function(dependencies);
         f.setLambda(function);
+        Transformer t;
+        if (exists) {
+            Integer oldTransId = master.getTransformerId(name);
+            if (oldTransId != null) {
+                TransformerRegister.remove(oldTransId);
+                t = new Transformer(master, f, oldTransId);
+                master.addTransformer(name, t.getTransId());
 
-        Transformer t = new Transformer(master, f);
-        master.addTransformer(name, t.getTransId());
+            }
+        } else {
+            t = new Transformer(master, f);
+            master.addTransformer(name, t.getTransId());
+        }
 
     }
 }
