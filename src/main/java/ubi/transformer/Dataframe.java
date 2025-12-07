@@ -1,4 +1,4 @@
-package ubi;
+package ubi.transformer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,9 +13,11 @@ import java.util.concurrent.CompletableFuture;
 public class Dataframe {
 
     private final Map<String, Integer> nameToIdReferences;
+    private final List<Column> columns;
 
     public Dataframe() {
         nameToIdReferences = new HashMap<>();
+        columns = new ArrayList<>();
     }
 
     /**
@@ -26,7 +28,9 @@ public class Dataframe {
      * @return A {@link Column} which can be processed.
      */
     public Column getCol(String name) {
-        return new Column(name, this);
+        Column newCol = new Column(name, this);
+        columns.add(newCol);
+        return newCol;
     }
 
     /**

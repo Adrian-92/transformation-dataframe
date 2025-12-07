@@ -24,7 +24,7 @@ This structure is ideal for defining complex dependency chains in a data pipelin
 
 # Example usage
 ````
-import ubi.Dataframe;
+import ubi.transformer.Dataframe;
 import ubi.lambda.Lambda;
 import java.util.List;
 import java.util.Map;

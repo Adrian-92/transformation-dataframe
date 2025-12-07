@@ -1,7 +1,9 @@
-package ubi;
+package ubi.transformer;
 
+import ubi.lambda.DependencyMapper;
 import ubi.lambda.Lambda;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Column {
@@ -31,17 +33,6 @@ public class Column {
 
 
     /**
-     * Defines calculation logic for a column.
-     * If override flag is set an existing transformer will be overwritten.
-     *
-     * @param function The {@link Lambda}-Function for calculating column values
-     * @param override if true an existing transformer will be overwritten
-     */
-    public void set(Lambda function, boolean override) {
-        setHelper(function, override);
-    }
-
-    /**
      * Defines calculation logic for a column without changing its dependencies.
      * An existing transformer will NOT be overwritten.
      *
@@ -57,26 +48,11 @@ public class Column {
      * This is the primary way to define a derived column dependent on other columns.
      * If override flag is set an existing transformer will be overwritten.
      *
-     * @param dependencies a list of column names which are needed as input for its {@code function}
-     * @param function     The {@link Lambda}-Function for calculating column values
-     * @param override     if true an existing transformer will be overwritten
+     * @param function The {@link Lambda}-Function for calculating column values
+     * @param override if true an existing transformer will be overwritten
      */
-    public void set(List<String> dependencies, Lambda function, boolean override) {
-        setDependencies(dependencies);
+    public void set(Lambda function, boolean override) {
         setHelper(function, override);
-    }
-
-    /**
-     * Sets dependencies for evaluation and calculation logic for a column
-     * This is the primary way to define a derived column dependent on other columns
-     * an existing transformer will NOT be overwritten
-     *
-     * @param dependencies a list of column names which are needed as input for its {@code function}
-     * @param function     The {@link Lambda}-Function for calculating column values
-     */
-    public void set(List<String> dependencies, Lambda function) {
-        setDependencies(dependencies);
-        setHelper(function, false);
     }
 
     /* ################ Internal helpers ################ */
@@ -85,11 +61,26 @@ public class Column {
         this.dependencies = dependencies;
     }
 
+    //
+    private void resolveDependencies(Lambda function) {
+        DependencyMapper mapper = new DependencyMapper();
+        // maybe there is a better solution but this works so don't touch it
+        try {
+            // dry run of function to resolve dependencies
+            function.execute(mapper);
+        } catch (Exception e) {
+            // result doesn't matter, this is just to prevent crashing if there is something wrong
+            System.out.println("Warning: " + e.getMessage());
+        }
+        setDependencies(new ArrayList<>(mapper.getAccessedKeys()));
+    }
+
     private void setHelper(Lambda function, boolean override) {
         boolean exists = master.hasTransformer(name);
 
+        resolveDependencies(function);
+
         if (exists && !override) {
-            // hier passiert später etwas anderes
             return;
         }
 

@@ -1,4 +1,4 @@
-package ubi;
+package ubi.transformer;
 
 import ubi.lambda.Lambda;
 
