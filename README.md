@@ -40,21 +40,19 @@ public class Main {
         df.getCol("B").set(5.0); 
 
         //  Define Derived Columns
-        List<String> dependenciesC = List.of("A", "B");
         Lambda lambdaC = (Map<String, Object> inputs) -> {
             double a = (Double) inputs.get("A");
             double b = (Double) inputs.get("B");
             return a + (b * Math.random());  // for instance some random function
         };
-        df.getCol("C").set(dependenciesC, lambdaC);
+        df.getCol("C").set(lambdaC);
 
         // Define further Derived Columns
-        List<String> dependenciesD = List.of("C");
         Lambda lambdaD = (Map<String, Object> inputs) -> {
             double c = (Double) inputs.get("C");
             return c * 3; 
         };
-        df.getCol("D").set(dependenciesD, lambdaD);
+        df.getCol("D").set(lambdaD);
 
         // Trigger Calculation and Fetch Results 
         int executionCount = 100;
