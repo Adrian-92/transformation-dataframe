@@ -57,6 +57,10 @@ public class Column {
 
     /* ################ Internal helpers ################ */
 
+    public String getName() {
+        return name;
+    }
+
     private void setDependencies(List<String> dependencies) {
         this.dependencies = dependencies;
     }
@@ -76,29 +80,23 @@ public class Column {
     }
 
     private void setHelper(Lambda function, boolean override) {
-        boolean exists = master.hasTransformer(name);
 
         resolveDependencies(function);
 
-        if (exists && !override) {
-            return;
-        }
-
         Function f = new Function(dependencies);
         f.setLambda(function);
-        Transformer t;
-        if (exists) {
-            Integer oldTransId = master.getTransformerId(name);
-            if (oldTransId != null) {
-                TransformerRegister.remove(oldTransId);
-                t = new Transformer(master, f, oldTransId);
-                master.addTransformer(name, t.getTransId());
 
-            }
+        boolean exists = master.hasTransformer(name);
+
+        if (exists && override) {
+            // OVERRIDE
+            // existing transformer will be overwritten with same id and all depending on columns will be adapted
+            Integer oldTransId = master.getTransformerId(name);
+            new Transformer(master, f, oldTransId);
+
         } else {
-            t = new Transformer(master, f);
+            Transformer t = new Transformer(master, f);
             master.addTransformer(name, t.getTransId());
         }
-
     }
 }

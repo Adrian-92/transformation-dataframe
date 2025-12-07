@@ -6,26 +6,17 @@ import java.util.concurrent.ConcurrentHashMap;
 
 class LazyRow {
 
-    // Cache storing computed values
-    Map<Integer, Object> values = new ConcurrentHashMap<>();
+    private final Map<Integer, CompletableFuture<Object>> values = new ConcurrentHashMap<>();
 
-    // Asynchronously retrieves a column's value by its Transformer ID
     CompletableFuture<Object> get(int transId) {
-        if (has(transId)) {
-            // Cache hit: returns immediately completed Future.
-            return CompletableFuture.completedFuture(values.get(transId));
-        }
-        // Cache miss: triggers asynchronous evaluation via the Transformer.
-        return TransformerRegister.get(transId).eval(this);
+        // computeIfAbsent ensures that every transformer only starts once per row
+        return values.computeIfAbsent(transId, id ->
+                TransformerRegister.get(id).eval(this)
+        );
     }
 
     boolean has(int transId) {
-        // Checks if the value is already in the cache.
-        return values.containsKey(transId);
+        return values.containsKey(transId) && values.get(transId).isDone();
     }
 
-    // Saves the result into the cache after successful evaluation.
-    void set(int transId, Object value) {
-        values.put(transId, value);
-    }
 }

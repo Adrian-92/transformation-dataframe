@@ -33,10 +33,7 @@ class Transformer {
         // Cache miss: executes the function, which handles fetching dependencies
         CompletableFuture<Object> resultFuture = function.execute(new RowNameWrapper(references, row));
         // When the calculation is complete, cache the result and return it
-        return resultFuture.thenApply(value -> {
-            row.set(getTransId(), value);
-            return value;
-        });
+        return resultFuture.thenApply(value -> value);
     }
 
     int getTransId() {
