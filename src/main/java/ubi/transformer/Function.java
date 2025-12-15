@@ -45,6 +45,8 @@ class Function {
 
                 inputs.put(name, future.join());
             }
+            // if you want to address a specific row to address time based events
+            inputs.put("_ROW_", rowNameWrapper.getRowIndex());
             return lambda.execute(inputs);
         });
     }

@@ -12,8 +12,12 @@ public class DependencyMapper extends HashMap<String, Object> {
 
     @Override
     public Object get(Object key) {
-        if (key instanceof String) {
-            accessedKeys.add((String) key);
+        if (key instanceof String k) {
+
+            if ("_ROW_".equals(k)) {
+                return 0;
+            }
+            accessedKeys.add(k);
         }
         return 0.0; // some default value, tweak this to match requirements
     }

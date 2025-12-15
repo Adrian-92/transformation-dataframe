@@ -5,13 +5,19 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
 class LazyRow {
-
+    private final Dataframe df;
+    private final int rowIndex;
     private final Map<Integer, CompletableFuture<Object>> values = new ConcurrentHashMap<>();
+
+    LazyRow(Dataframe df, int rowIndex) {
+        this.df = df;
+        this.rowIndex = rowIndex;
+    }
 
     CompletableFuture<Object> get(int transId) {
         // computeIfAbsent ensures that every transformer only starts once per row
         return values.computeIfAbsent(transId, id ->
-                TransformerRegister.get(id).eval(this)
+                df.get(id).eval(this)
         );
     }
 
@@ -19,4 +25,7 @@ class LazyRow {
         return values.containsKey(transId) && values.get(transId).isDone();
     }
 
+    public int getRowIndex() {
+        return rowIndex;
+    }
 }

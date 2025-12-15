@@ -20,4 +20,8 @@ class RowNameWrapper {
         }
         return row.get(transId);
     }
+
+    int getRowIndex() {
+        return row.getRowIndex();
+    }
 }

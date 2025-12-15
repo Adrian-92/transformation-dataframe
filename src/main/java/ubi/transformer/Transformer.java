@@ -12,8 +12,8 @@ class Transformer {
     Transformer(Dataframe df, Function f) {
         this.references = df.copyReferences();
         this.function = f;
-        this.id = TransformerRegister.nextTransformerId();
-        TransformerRegister.add(this);
+        this.id = df.nextTransformerId();
+        df.add(this);
     }
 
     // be cautious with this one
@@ -21,7 +21,7 @@ class Transformer {
         this.references = df.copyReferences();
         this.function = f;
         this.id = id;
-        TransformerRegister.add(this);
+        df.add(this);
 
     }
 

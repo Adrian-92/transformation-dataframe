@@ -1,19 +1,32 @@
 package ubi.transformer;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Represents a tabular data structure which manages calculation of columns independently.
  * The calculation will be performed lazy and asynchronous and cached per row
  */
 public class Dataframe {
-
+    private int currentRow = 0;
     private final Map<String, Integer> nameToIdReferences;
     private final List<Column> columns;
+
+    private final AtomicInteger transformerId = new AtomicInteger(0);
+    private final Map<Integer, Transformer> references = Collections.synchronizedMap(new HashMap<>());
+
+    Transformer get(int transId) {
+        return references.get(transId);
+    }
+
+    void add(Transformer transformer) {
+        references.put(transformer.getTransId(), transformer);
+    }
+
+    int nextTransformerId() {
+        return transformerId.incrementAndGet();
+    }
 
     public Dataframe() {
         nameToIdReferences = new HashMap<>();
@@ -42,20 +55,9 @@ public class Dataframe {
      * @return nxn-matrix like object structure with all calculated values.
      */
     public List<List<Object>> take(int n) {
-        return takeHelper(n, 0);
-    }
-
-    /**
-     * Executes the evaluation for n columns across n simulated rows
-     * and collects all results.
-     * if n is greater than the number of existing columns it will be filled with default values.
-     *
-     * @param n            number of columns and rows.
-     * @param defaultValue sets a default entry for missing columns.
-     * @return nxn-matrix like object structure with all calculated values.
-     */
-    public List<List<Object>> take(int n, Object defaultValue) {
-        return takeHelper(n, defaultValue);
+        int startRow = currentRow;
+        currentRow += n;
+        return takeHelper(n, startRow);
     }
 
     Integer getTransformerId(String name) {
@@ -77,20 +79,11 @@ public class Dataframe {
 
     /* ################ Internal helpers ################ */
     // used for overloading default value
-    private List<List<Object>> takeHelper(int n, Object defaultValue) {
-        List<List<Object>> results = new ArrayList<>();
+    private List<List<Object>> takeHelper(int n, int startRow) {
+        List<List<Object>> results = new ArrayList<>(n);
 
-        for (int i = 0; i < n; i++) {
-            if (i < columns.size()) {
-                Column col = columns.get(i);
-                results.add(takeNameHelper(col.getName(), n));
-            } else {
-                List<Object> defaultValues = new ArrayList<>(n);
-                for (int row = 0; row < n; row++) {
-                    defaultValues.add(defaultValue);
-                }
-                results.add(defaultValues);
-            }
+        for (Column col : columns) {
+            results.add(takeNameHelper(col.getName(), startRow, n));
         }
         return results;
     }
@@ -105,12 +98,13 @@ public class Dataframe {
      * @param n    The number of rows to process.
      * @return A list containing the result for each of the 'n' rows.
      */
-    private List<Object> takeNameHelper(String name, int n) {
+    private List<Object> takeNameHelper(String name, int startRow, int n) {
         List<Object> results = new ArrayList<>(n);
         for (int i = 1; i <= n; i++) {
+            int currentRowIndex = startRow + i;
             // each row must instantiate a new lazy row
             // this is kind of caching
-            LazyRow currentRow = new LazyRow();
+            LazyRow currentRow = new LazyRow(this, currentRowIndex);
 
             RowNameWrapper rowWrapper = new RowNameWrapper(copyReferences(), currentRow);
 

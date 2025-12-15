@@ -31,6 +31,12 @@ public class Column {
         setHelper(constantLambda, false);
     }
 
+    public void set(Object value, boolean override) {
+        // Creates a Lambda that just returns the constant value
+        Lambda constantLambda = inputs -> value;
+        // Source column has no dependencies - see constructor
+        setHelper(constantLambda, override);
+    }
 
     /**
      * Defines calculation logic for a column without changing its dependencies.

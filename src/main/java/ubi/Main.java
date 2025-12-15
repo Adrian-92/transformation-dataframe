@@ -3,70 +3,114 @@ package ubi;
 import ubi.lambda.Lambda;
 import ubi.transformer.Dataframe;
 
-import java.util.Map;
-
 public class Main {
 
     public static void main(String[] args) {
-        //test1();
-        //test2();
-        //test3();
+        System.out.println("\nMinimal scenario");
+        testMinimal();
+        System.out.println("\nScenario with row indices");
+        testIndexScenario();
+        System.out.println("\nScenario with dependencies");
+        testDependencyScenario();
     }
 
-    private static void test1() {
+
+    /**
+     * this is the standard usage scenario
+     * define a column and set it to any function or value
+     * if you set the override flag and set the same column to another function or value
+     * you set a new function
+     * <p>
+     * by using the take-function you take n rows of this column
+     */
+    private static void testMinimal() {
         Dataframe df = new Dataframe();
-        // Define Source Columns
-        df.getCol("A").set(10.0);
-        df.getCol("B").set(5.0);
-        //  Define Derived Columns
-        Lambda lambdaC = (Map<String, Object> inputs) -> {
-            double a = (Double) inputs.get("A");
-            double b = (Double) inputs.get("B");
-            return a + (b * Math.random());  // for instance some random function
+        System.out.println("\n--- Some data ---");
+        df.getCol("A").set(inputs -> 20.0 + Math.random()); // normal
+
+        var batch1 = df.take(10);
+        System.out.println(batch1);
+
+        df.getCol("A").set(inputs -> 50.0 + Math.random(), true); // drift
+
+        System.out.println("\n--- Some drift ---");
+        var batch2 = df.take(10);
+        System.out.println(batch2);
+    }
+
+    /**
+     * this scenario shows a usage where you can set the rows where drift occurs
+     * by addressing the row itself with
+     * int row = (int) inputs.get("_ROW_");
+     * note that "_ROW_" is therefore a reserved key for the column name and cannot be used
+     */
+    private static void testIndexScenario() {
+        Dataframe df = new Dataframe();
+
+        // some linear rising value based on row index
+        Lambda trendLogic = (inputs) -> {
+            int row = (int) inputs.get("_ROW_");
+            return 20.0 + (row * 0.1);
         };
-        df.getCol("C").set(lambdaC);
-        // Define further Derived Columns
-        Lambda lambdaD = (Map<String, Object> inputs) -> {
-            double c = (Double) inputs.get("C");
-            return c * 3;
+
+        df.getCol("Sensor").set(trendLogic);
+
+        System.out.println("---normal scenario ---");
+        var batch1 = df.take(10);
+        System.out.println(batch1);
+
+
+        // (Override = true) some artificial defect
+        Lambda defectLogic = (inputs) -> {
+            int row = (int) inputs.get("_ROW_");
+            return 100.0 + (Math.sin(row) * 5.0);
         };
-        df.getCol("D").set(lambdaD);
-        // Trigger Calculation and Fetch Results
-        int executionCount = 10;
-        System.out.println(df.take(executionCount));
+
+        df.getCol("Sensor").set(defectLogic, true);
+
+        System.out.println("\n--- drift scenario ---");
+        var batch2 = df.take(10);
+        System.out.println(batch2);
+
+
+        // artificial defect repaired
+        df.getCol("Sensor").set(trendLogic, true);
+
+        System.out.println("\n--- normal scenario again ---");
+        var batch3 = df.take(10);
+        System.out.println(batch3);
     }
 
-    private static void test2() {
+    private static void testDependencyScenario() {
         Dataframe df = new Dataframe();
 
-        // Define Source Columns
-        df.getCol("A").set(10.0);
-        df.getCol("B").set(5.0);
+        df.getCol("Price").set(10.0);
 
-        // "real" lambda
-        Lambda lambdaC = (Map<String, Object> inputs) -> (Double) inputs.get("A") + ((Double) inputs.get("B") * 2);
-        df.getCol("C").set(lambdaC);
+        df.getCol("Sales").set(inputs -> {
+            int row = (int) inputs.get("_ROW_");
+            return 100.0 + (double) row;
+        });
 
-        System.out.println("Before override");
-        System.out.println(df.take(3));
-        Lambda lambdaA = (Map<String, Object> inputs) -> (Double) 666.0;
 
-        System.out.println("A with override = true");
-        // this should change the result
-        df.getCol("A").set(lambdaA, true);
-        System.out.println(df.take(3));
-    }
+        df.getCol("Revenue").set(inputs -> {
+            double p = (Double) inputs.get("Price");
+            double s = (Double) inputs.get("Sales");
+            return p * s;
+        });
 
-    private static void test3() {
-
-        Dataframe df = new Dataframe();
-
-        // Define Source Columns
-        df.getCol("A").set(10.0);
-        df.getCol("B").set(5.0);
-
-        //  Define Derived Columns
-        df.getCol("C").set((Map<String, Object> inputs) -> (Double) inputs.get("A") + ((Double) inputs.get("B") * Math.random()));
+        System.out.println("--- price at 10 ---");
         System.out.println(df.take(5));
+
+
+        df.getCol("Price").set(20.0, true); // override=true
+
+        System.out.println("\n--- price rises to 20.0 ---");
+        System.out.println(df.take(5));
+
+        df.getCol("Sales").set(inputs -> 50.0 + Math.random(), true);
+
+        System.out.println("\n--- sales crash ---");
+        System.out.println(df.take(5));
+
     }
 }
