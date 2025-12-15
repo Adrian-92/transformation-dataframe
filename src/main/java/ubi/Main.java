@@ -81,6 +81,11 @@ public class Main {
         System.out.println(batch3);
     }
 
+    /**
+     * this scenario shows a usage where columns depend on other defined columns
+     * and shows its reaction to changes with the override flag set
+     * it also addresses the same row-indexing as the scenario above
+     */
     private static void testDependencyScenario() {
         Dataframe df = new Dataframe();
 
